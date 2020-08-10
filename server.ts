@@ -3,7 +3,7 @@ import { AddressInfo } from 'net';
 
 const app = fastify({ logger: false });
 
-app.post('/', async (req, res) => {
+app.all('/', async (req, res) => {
   console.log("request received:\n", req.body);
   return { hello: 'world' };
 });
