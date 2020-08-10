@@ -1,7 +1,12 @@
 import fastify from 'fastify';
 import { AddressInfo } from 'net';
+import { GoogleSpreadsheet } from 'google-spreadsheet';
 
 const app = fastify({ logger: false });
+
+app.all('/oauth2redirect', async (req, res) => {
+  console.log('oauth2 redirect');
+});
 
 app.all('/', async (req, res) => {
   console.log("request received:\n", req.body);
@@ -21,5 +26,23 @@ const start = async () => {
     process.exit(1);
   }
 };
+
+app.all('/sheet', async (req, res) => {
+  const doc = new GoogleSpreadsheet('1Ct7hto3iN6iP-hxy-rXe7H3Gm3xWXQ3KZRCjUt7wOgw');
+  await doc.useServiceAccountAuth({
+    client_email: process.env.SERVICE_ACC_CLIENT_EMAIL,
+    private_key: process.env.SERVICE_ACC_PRIVATE_KEY,
+  });
+  await doc.loadInfo();
+  await doc.updateProperties({ title: 'renamed doc' });
+
+  const sheet = doc.sheetsByIndex[0]; // or use doc.sheetsById[id]
+  console.log(sheet.title);
+  console.log(sheet.rowCount);
+
+  // adding / removing sheets
+  const newSheet = await doc.addSheet({ title: 'hot new sheet!' });
+  console.log('all done');
+});
 
 start();
