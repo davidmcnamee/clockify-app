@@ -6,6 +6,16 @@
       "src": "/",
       "dest": "/server.ts",
       "methods": ["GET", "POST"]
+    },
+    {
+      "src": "/sheet",
+      "dest": "/server.ts",
+      "methods": ["GET", "POST"]
+    },
+    {
+      "src": "/oauth2callback",
+      "dest": "/server.ts",
+      "methods": ["GET", "POST"]
     }
   ]
 }
