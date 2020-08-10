@@ -28,12 +28,16 @@ const start = async () => {
 };
 
 app.all('/sheet', async (req, res) => {
+  console.log('instantiating doc');
   const doc = new GoogleSpreadsheet('1Ct7hto3iN6iP-hxy-rXe7H3Gm3xWXQ3KZRCjUt7wOgw');
+  console.log('authorizing');
   await doc.useServiceAccountAuth({
     client_email: process.env.SERVICE_ACC_CLIENT_EMAIL,
     private_key: process.env.SERVICE_ACC_PRIVATE_KEY,
   });
+  console.log('loading info');
   await doc.loadInfo();
+  console.log('updating title');
   await doc.updateProperties({ title: 'renamed doc' });
 
   const sheet = doc.sheetsByIndex[0]; // or use doc.sheetsById[id]
@@ -43,6 +47,7 @@ app.all('/sheet', async (req, res) => {
   // adding / removing sheets
   const newSheet = await doc.addSheet({ title: 'hot new sheet!' });
   console.log('all done');
+  return { all: 'done' };
 });
 
 start();
